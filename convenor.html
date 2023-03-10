@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Data Scraping</title>
+
+	<link rel="stylesheet" href="lib/style.css"  />
+	<script src="lib/jquery-3.6.4.js"></script>
+
+</head>
+
+<body>
+
+
+<a href="/datascrape" class="homeButton">Home</a>
+<button class="click" data-count="0" onClick="stopFetch()">Loading Data...</button>
+
+
+<table class="output"  >
+<tr>
+<!--	<td>Sl.No.</td>-->
+	<th>IIC ID</th>	
+	<th>Name</th>	
+	<th>Designation</th>	
+	<th>Email</th>	
+	<th>Details</th>	
+</tr>
+
+</table>
+
+<script>
+var intervalId = window.setInterval(function(){
+	
+//$(".click").click( function() {
+	var count = $(".click").data("count");
+	
+	$(".click").html("<h5> Page " + count + "</h5>");
+	
+	request = $.ajax({
+        url: "process/process.php",
+        type: "POST",
+		data: { count : count, dataset : 'convenors' } 
+    });
+
+    request.done(function (response, textStatus, jqXHR){
+        console.log(response);
+		$(".output").append('<tr>' + response + '</tr>');		
+    });
+	
+	count++;
+	
+	$(".click").data("count", count);
+	
+	//console.log(count);
+//})
+
+	
+}, 15000);
+	
+function stopFetch() {
+  clearInterval(intervalId);
+	var count = $(".click").data("count"); 
+  $(".click").html("<h5> Stopped fetching at page " + count + "</h5>");
+}
+
+
+
+</script>
+</body>
+</html>
+
+
+
+

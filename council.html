@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Data Scraping: Council</title>
+
+	<link rel="stylesheet" href="lib/style.css"  />
+	<script src="lib/jquery-3.6.4.js"></script>
+
+</head>
+
+<body>
+
+
+<a href="/datascrape" class="homeButton">Home</a>
+<button class="click" data-count="0" onClick="stopFetch()">Loading Data...</button>
+
+
+<table class="output"  >
+<tr>
+	<th>IIC ID</th>	
+	<th>Member Type</th>	
+	<th>Name</th>	
+	<th>Department</th>	
+	<th>Experience</th>	
+	<th>CV Path</th>	
+	<th>Roles</th>	
+	<th>Email</th>	
+	<th>Gender</th>	
+	<th>Mobile</th>	
+	<th>Organisation</th>	
+	<th>Designation</th>	
+	<th>Stream</th>	
+	<th>Qualification</th>	
+	<th>Created on</th>	
+	<th>Nomination</th>	
+</tr>
+
+</table>
+
+<script>
+var intervalId = window.setInterval(function(){
+	
+//$(".click").click( function() {
+	var count = $(".click").data("count");
+	
+	$(".click").html("<h5> Page " + count + "</h5>");
+	
+	request = $.ajax({
+        url: "process/process.php",
+        type: "POST",
+		data: { count : count, dataset : 'councils' } 
+    });
+
+    request.done(function (response, textStatus, jqXHR){
+        console.log(response);
+		$(".output").append('<tr>' + response + '</tr>');		
+    });
+	
+	count++;
+	
+	$(".click").data("count", count);
+	
+	//console.log(count);
+//})
+
+	
+}, 15000);
+	
+function stopFetch() {
+  clearInterval(intervalId);
+	var count = $(".click").data("count"); 
+  $(".click").html("<h5> Stopped fetching at page " + count + "</h5>");
+}
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
